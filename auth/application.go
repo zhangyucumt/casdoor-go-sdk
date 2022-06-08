@@ -14,7 +14,10 @@
 
 package auth
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // Application has the same definition as https://github.com/casdoor/casdoor/blob/master/object/application.go#L24
 type Application struct {
@@ -70,9 +73,9 @@ func AddApplication(application *Application) (bool, error) {
 	return resp.Data == "Affected", nil
 }
 
-func GetApplication(id string) (*Application, error) {
+func GetApplication() (*Application, error) {
 	queryMap := map[string]string{
-		"id": id,
+		"id": fmt.Sprintf("admin/%s", authConfig.ApplicationName),
 	}
 	url := GetUrl("get-application", queryMap)
 	bytes, err := DoGetBytes(url)
