@@ -92,12 +92,15 @@ func GetApplication() (*Application, error) {
 }
 
 func UpdateApplication(application *Application) (bool, error) {
+	queryMap := map[string]string{
+		"id": fmt.Sprintf("%s/%s", application.Owner, application.Name),
+	}
 	postBytes, err := json.Marshal(application)
 	if err != nil {
 		return false, err
 	}
 
-	resp, err := doPost("update-application", nil, postBytes, false)
+	resp, err := doPost("update-application", queryMap, postBytes, false)
 	if err != nil {
 		return false, err
 	}
