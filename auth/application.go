@@ -22,8 +22,13 @@ type Application struct {
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
 
+	Logo       string `xorm:"varchar(100) comment('登陆页面logo')" json:"logo"`
+	Title      string `xorm:"varchar(100) comment('浏览器标题')" json:"title"`
+	Favicon    string `xorm:"varchar(100) comment('浏览器favicon图标')" json:"favicon"`
+	Background string `xorm:"varchar(100) comment('登陆页面背景')" json:"background"`
+	HomeLogo   string `xorm:"varchar(100) comment('首页logo')" json:"home_logo"`
+
 	DisplayName         string `xorm:"varchar(100)" json:"displayName"`
-	Logo                string `xorm:"varchar(100)" json:"logo"`
 	HomepageUrl         string `xorm:"varchar(100)" json:"homepageUrl"`
 	Description         string `xorm:"varchar(100)" json:"description"`
 	Organization        string `xorm:"varchar(100)" json:"organization"`
@@ -58,6 +63,37 @@ func AddApplication(application *Application) (bool, error) {
 	}
 
 	resp, err := doPost("add-application", nil, postBytes, false)
+	if err != nil {
+		return false, err
+	}
+
+	return resp.Data == "Affected", nil
+}
+
+func GetApplication(id string) (*Application, error) {
+	queryMap := map[string]string{
+		"id": id,
+	}
+	url := GetUrl("get-application", queryMap)
+	bytes, err := DoGetBytes(url)
+	if err != nil {
+		return nil, err
+	}
+	var application *Application
+	err = json.Unmarshal(bytes, &application)
+	if err != nil {
+		return nil, err
+	}
+	return application, nil
+}
+
+func UpdateApplication(application *Application) (bool, error) {
+	postBytes, err := json.Marshal(application)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := doPost("update-application", nil, postBytes, false)
 	if err != nil {
 		return false, err
 	}
