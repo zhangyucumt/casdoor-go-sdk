@@ -1,4 +1,4 @@
-module github.com/casdoor/casdoor-go-sdk
+module github.com/lxdcc/casdoor-go-sdk
 
 go 1.16
 
