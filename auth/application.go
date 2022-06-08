@@ -30,6 +30,7 @@ type Application struct {
 	Favicon    string `xorm:"varchar(100) comment('浏览器favicon图标')" json:"favicon"`
 	Background string `xorm:"varchar(100) comment('登陆页面背景')" json:"background"`
 	HomeLogo   string `xorm:"varchar(100) comment('首页logo')" json:"home_logo"`
+	Copyright  string `xorm:"varchar(100) comment('版权信息')" json:"copyright"`
 
 	DisplayName         string `xorm:"varchar(100)" json:"displayName"`
 	HomepageUrl         string `xorm:"varchar(100)" json:"homepageUrl"`
