@@ -40,8 +40,8 @@ type Application struct {
 	EnableSignUp        bool          `json:"enableSignUp"`
 	EnableSigninSession bool          `json:"enableSigninSession"`
 	EnableCodeSignin    bool          `json:"enableCodeSignin"`
-	Providers           []*string     `xorm:"mediumtext" json:"providers"`
-	SignupItems         []*string     `xorm:"varchar(1000)" json:"signupItems"`
+	Providers           []string      `xorm:"mediumtext" json:"providers"`
+	SignupItems         []string      `xorm:"varchar(1000)" json:"signupItems"`
 	GrantTypes          []string      `xorm:"varchar(1000)" json:"grantTypes"`
 	OrganizationObj     *Organization `xorm:"-" json:"organizationObj"`
 
