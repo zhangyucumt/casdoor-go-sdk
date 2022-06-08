@@ -78,7 +78,7 @@ func GetApplication() (*Application, error) {
 		"id": fmt.Sprintf("admin/%s", authConfig.ApplicationName),
 	}
 	url := GetUrl("get-application", queryMap)
-	bytes, err := DoGetBytes(url)
+	bytes, err := DoGetBytesRaw(url)
 	if err != nil {
 		return nil, err
 	}
