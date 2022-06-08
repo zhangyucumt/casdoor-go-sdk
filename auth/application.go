@@ -19,7 +19,6 @@ import (
 	"fmt"
 )
 
-// Application has the same definition as https://github.com/casdoor/casdoor/blob/master/object/application.go#L24
 type Application struct {
 	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
@@ -32,15 +31,19 @@ type Application struct {
 	HomeLogo   string `xorm:"varchar(100) comment('首页logo')" json:"home_logo"`
 	Copyright  string `xorm:"varchar(100) comment('版权信息')" json:"copyright"`
 
-	DisplayName         string `xorm:"varchar(100)" json:"displayName"`
-	HomepageUrl         string `xorm:"varchar(100)" json:"homepageUrl"`
-	Description         string `xorm:"varchar(100)" json:"description"`
-	Organization        string `xorm:"varchar(100)" json:"organization"`
-	Cert                string `xorm:"varchar(100)" json:"cert"`
-	EnablePassword      bool   `json:"enablePassword"`
-	EnableSignUp        bool   `json:"enableSignUp"`
-	EnableSigninSession bool   `json:"enableSigninSession"`
-	EnableCodeSignin    bool   `json:"enableCodeSignin"`
+	DisplayName         string        `xorm:"varchar(100)" json:"displayName"`
+	HomepageUrl         string        `xorm:"varchar(100)" json:"homepageUrl"`
+	Description         string        `xorm:"varchar(100)" json:"description"`
+	Organization        string        `xorm:"varchar(100)" json:"organization"`
+	Cert                string        `xorm:"varchar(100)" json:"cert"`
+	EnablePassword      bool          `json:"enablePassword"`
+	EnableSignUp        bool          `json:"enableSignUp"`
+	EnableSigninSession bool          `json:"enableSigninSession"`
+	EnableCodeSignin    bool          `json:"enableCodeSignin"`
+	Providers           []*string     `xorm:"mediumtext" json:"providers"`
+	SignupItems         []*string     `xorm:"varchar(1000)" json:"signupItems"`
+	GrantTypes          []string      `xorm:"varchar(1000)" json:"grantTypes"`
+	OrganizationObj     *Organization `xorm:"-" json:"organizationObj"`
 
 	ClientId             string   `xorm:"varchar(100)" json:"clientId"`
 	ClientSecret         string   `xorm:"varchar(100)" json:"clientSecret"`
