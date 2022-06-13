@@ -206,3 +206,28 @@ func modifyRole(action string, role *Role, columns []string) (*Response, bool, e
 
 	return resp, resp.Data == "Affected", nil
 }
+
+// modifyRole is an encapsulation of user CUD(Create, Update, Delete) operations.
+// possible actions are `add-action`, `update-action`, `delete-action`,
+func modifyAction(url string, action *Action, columns []string) (*Response, bool, error) {
+	queryMap := map[string]string{
+		"id": fmt.Sprintf("%s/%s", action.Owner, action.Name),
+	}
+
+	if len(columns) != 0 {
+		queryMap["columns"] = strings.Join(columns, ",")
+	}
+
+	action.Owner = authConfig.OrganizationName
+	postBytes, err := json.Marshal(action)
+	if err != nil {
+		return nil, false, err
+	}
+
+	resp, err := doPost(url, queryMap, postBytes, false)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return resp, resp.Data == "Affected", nil
+}

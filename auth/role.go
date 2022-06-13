@@ -11,9 +11,11 @@ type Role struct {
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
 	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
-	Users     []string `xorm:"mediumtext" json:"users"`
-	Roles     []string `xorm:"mediumtext" json:"roles"`
-	IsEnabled bool     `json:"isEnabled"`
+	Users         []string `xorm:"mediumtext" json:"users"`
+	Roles         []string `xorm:"mediumtext" json:"roles"`
+	Actions       []string `xorm:"mediumtext" json:"actions"`
+	Notifications []string `xorm:"mediumtext" json:"notifications" json:"notifications"`
+	IsEnabled     bool     `json:"isEnabled"`
 }
 
 func GetRoles() ([]*Role, error) {
