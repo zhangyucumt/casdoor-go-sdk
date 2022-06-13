@@ -231,3 +231,28 @@ func modifyAction(url string, action *Action, columns []string) (*Response, bool
 
 	return resp, resp.Data == "Affected", nil
 }
+
+// modifyRole is an encapsulation of user CUD(Create, Update, Delete) operations.
+// possible actions are `add-action`, `update-action`, `delete-action`,
+func modifyToken(url string, token *Token, columns []string) (*Response, bool, error) {
+	queryMap := map[string]string{
+		"id": fmt.Sprintf("%s/%s", token.Owner, token.Name),
+	}
+
+	if len(columns) != 0 {
+		queryMap["columns"] = strings.Join(columns, ",")
+	}
+
+	token.Owner = authConfig.OrganizationName
+	postBytes, err := json.Marshal(token)
+	if err != nil {
+		return nil, false, err
+	}
+
+	resp, err := doPost(url, queryMap, postBytes, false)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return resp, resp.Data == "Affected", nil
+}

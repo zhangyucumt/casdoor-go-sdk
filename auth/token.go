@@ -16,12 +16,91 @@ package auth
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
 
 	"golang.org/x/oauth2"
 )
+
+type Token struct {
+	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
+	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
+	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
+
+	Application  string `xorm:"varchar(100)" json:"application"`
+	Organization string `xorm:"varchar(100)" json:"organization"`
+	User         string `xorm:"varchar(100)" json:"user"`
+
+	Code          string `xorm:"varchar(100)" json:"code"`
+	AccessToken   string `xorm:"mediumtext" json:"accessToken"`
+	RefreshToken  string `xorm:"mediumtext" json:"refreshToken"`
+	ExpiresIn     int    `json:"expiresIn"`
+	Scope         string `xorm:"varchar(100)" json:"scope"`
+	TokenType     string `xorm:"varchar(100)" json:"tokenType"`
+	CodeChallenge string `xorm:"varchar(100)" json:"codeChallenge"`
+	CodeIsUsed    bool   `json:"codeIsUsed"`
+	CodeExpireIn  int64  `json:"codeExpireIn"`
+}
+
+func GetTokens() ([]*Token, error) {
+	queryMap := map[string]string{
+		"owner":     authConfig.OrganizationName,
+		"tokenType": "AccessToken",
+	}
+
+	url := GetUrl("get-tokens", queryMap)
+
+	bytes, err := DoGetBytesRaw(url)
+	if err != nil {
+		return nil, err
+	}
+
+	var tokens []*Token
+	err = json.Unmarshal(bytes, &tokens)
+	if err != nil {
+		return nil, err
+	}
+	return tokens, nil
+}
+
+func GetToken(name string) (*Token, error) {
+	queryMap := map[string]string{
+		"id":        fmt.Sprintf("%s/%s", authConfig.OrganizationName, name),
+		"tokenType": "AccessToken",
+	}
+
+	url := GetUrl("get-token", queryMap)
+
+	bytes, err := DoGetBytesRaw(url)
+	if err != nil {
+		return nil, err
+	}
+
+	var token *Token
+	err = json.Unmarshal(bytes, &token)
+	if err != nil {
+		return nil, err
+	}
+	return token, nil
+}
+
+func UpdateToken(token *Token) (bool, error) {
+	token.TokenType = "AccessToken"
+	_, affected, err := modifyToken("update-token", token, nil)
+	return affected, err
+}
+
+func AddToken(token *Token) (bool, error) {
+	_, affected, err := modifyToken("add-token", token, nil)
+	return affected, err
+}
+
+func DeleteToken(token *Token) (bool, error) {
+	_, affected, err := modifyToken("delete-token", token, nil)
+	return affected, err
+}
 
 // GetOAuthToken gets the pivotal and necessary secret to interact with the Casdoor server
 func GetOAuthToken(code string, state string) (*oauth2.Token, error) {
