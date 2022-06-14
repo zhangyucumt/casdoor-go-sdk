@@ -17,6 +17,7 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 type emailForm struct {
@@ -48,4 +49,117 @@ func SendEmail(title string, content string, sender string, receivers ...string)
 	}
 
 	return nil
+}
+
+type EmailProviderForm struct {
+	Owner       string
+	Username    string
+	Password    string
+	Host        string
+	Port        int
+	Title       string
+	Content     string
+	ProviderUrl string
+	Name        string
+	DisplayName string
+	Type        string
+}
+
+func NewEmailProvider(host string, port int, username string, password string, owner string) EmailProviderForm {
+	str := genRandomString(6)
+	name := "provider_" + str
+	displayName := "New Provider - " + str
+	form := EmailProviderForm{
+		Owner:       owner,
+		Name:        name,
+		DisplayName: displayName,
+		Host:        host,
+		Port:        port,
+		Username:    username,
+		Password:    password,
+		Type:        "Default",
+		ProviderUrl: "https://github.com/organizations/xxx/settings/applications/1234567",
+		Content:     "You have requested a verification code at Casdoor. Here is your code: %s, please enter in 5 minutes.",
+		Title:       "Casdoor Verification Code",
+	}
+	return form
+}
+
+func CreateEmailProvider(form EmailProviderForm) (bool, error) {
+	provider := Provider{
+		Owner:        form.Owner,
+		Name:         form.Name,
+		DisplayName:  form.DisplayName,
+		Host:         form.Host,
+		Port:         form.Port,
+		ClientId:     form.Username,
+		ClientSecret: form.Password,
+		Type:         form.Type,
+		ProviderUrl:  form.ProviderUrl,
+		Content:      form.Content,
+		Title:        form.Title,
+		CreatedTime:  time.Now().Format("2006-01-02T15:04:05+08:00"),
+		Category:     "Email",
+		Method:       "Normal",
+	}
+
+	postBytes, err := json.Marshal(provider)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := doPost("add-provider", nil, postBytes, false)
+	if err != nil {
+		return false, err
+	}
+	return resp.Data == "Affected", nil
+}
+
+func UpdateEmailProvider(provider Provider, form EmailProviderForm) (bool, error) {
+	if form.Owner != "" {
+		provider.Owner = form.Owner
+	}
+	if form.Name != "" {
+		provider.Name = form.Name
+	}
+	if form.DisplayName != "" {
+		provider.DisplayName = form.DisplayName
+	}
+	if form.Host != "" {
+		provider.Host = form.Host
+	}
+	if form.Port != 0 {
+		provider.Port = form.Port
+	}
+	if form.Username != "" {
+		provider.ClientId = form.Username
+	}
+	if form.Password != "" {
+		provider.ClientSecret = form.Password
+	}
+	if form.Type != "" {
+		provider.Type = form.Type
+	}
+	if form.ProviderUrl != "" {
+		provider.ProviderUrl = form.ProviderUrl
+	}
+	if form.Content != "" {
+		provider.Content = form.Content
+	}
+	if form.Title != "" {
+		provider.Title = form.Title
+	}
+
+	postBytes, err := json.Marshal(provider)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := doPost("update-provider", map[string]string{
+		"id": provider.Owner + "/" + provider.Name,
+	}, postBytes, false)
+	if err != nil {
+		return false, err
+	}
+	return resp.Data == "Affected", nil
 }

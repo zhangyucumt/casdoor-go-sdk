@@ -18,8 +18,10 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"math/rand"
 	"mime/multipart"
 	"strings"
+	"time"
 )
 
 func GetUrl(action string, queryMap map[string]string) string {
@@ -53,4 +55,15 @@ func createForm(formData map[string][]byte) (string, io.Reader, error) {
 	}
 
 	return w.FormDataContentType(), body, nil
+}
+
+func genRandomString(length int) string {
+	str := "0123456789abcdefghijklmnopqrstuvwxyz"
+	_bytes := []byte(str)
+	result := []byte{}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < length; i++ {
+		result = append(result, _bytes[r.Intn(len(_bytes))])
+	}
+	return string(result)
 }

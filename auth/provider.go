@@ -1,5 +1,9 @@
 package auth
 
+import (
+	"encoding/json"
+)
+
 type Provider struct {
 	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
@@ -52,4 +56,21 @@ type ProviderItem struct {
 	Prompted  bool      `json:"prompted"`
 	AlertType string    `json:"alertType"`
 	Provider  *Provider `json:"provider"`
+}
+
+func GetProviders(owner string) ([]Provider, error) {
+	queryMap := map[string]string{
+		"owner": owner,
+	}
+	url := GetUrl("get-providers", queryMap)
+	bytes, err := DoGetBytesRaw(url)
+	if err != nil {
+		return nil, err
+	}
+	var providers []Provider
+	err = json.Unmarshal(bytes, &providers)
+	if err != nil {
+		return nil, err
+	}
+	return providers, nil
 }
