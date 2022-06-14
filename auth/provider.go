@@ -74,3 +74,20 @@ func GetProviders(owner string) ([]Provider, error) {
 	}
 	return providers, nil
 }
+
+func GetProvider(id string) (*Provider, error) {
+	queryMap := map[string]string{
+		"id": id,
+	}
+	url := GetUrl("get-provider", queryMap)
+	bytes, err := DoGetBytesRaw(url)
+	if err != nil {
+		return nil, err
+	}
+	var provider *Provider
+	err = json.Unmarshal(bytes, &provider)
+	if err != nil {
+		return nil, err
+	}
+	return provider, nil
+}
