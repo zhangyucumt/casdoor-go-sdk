@@ -115,51 +115,51 @@ func CreateEmailProvider(form EmailProviderForm) (bool, error) {
 	return resp.Data == "Affected", nil
 }
 
-func UpdateEmailProvider(provider Provider, form EmailProviderForm) (bool, error) {
-	if form.Owner != "" {
-		provider.Owner = form.Owner
-	}
-	if form.Name != "" {
-		provider.Name = form.Name
-	}
-	if form.DisplayName != "" {
-		provider.DisplayName = form.DisplayName
-	}
-	if form.Host != "" {
-		provider.Host = form.Host
-	}
-	if form.Port != 0 {
-		provider.Port = form.Port
-	}
-	if form.Username != "" {
-		provider.ClientId = form.Username
-	}
-	if form.Password != "" {
-		provider.ClientSecret = form.Password
-	}
-	if form.Type != "" {
-		provider.Type = form.Type
-	}
-	if form.ProviderUrl != "" {
-		provider.ProviderUrl = form.ProviderUrl
-	}
-	if form.Content != "" {
-		provider.Content = form.Content
-	}
-	if form.Title != "" {
-		provider.Title = form.Title
-	}
-
-	postBytes, err := json.Marshal(provider)
-	if err != nil {
-		return false, err
-	}
-
-	resp, err := doPost("update-provider", map[string]string{
-		"id": provider.Owner + "/" + provider.Name,
-	}, postBytes, false)
-	if err != nil {
-		return false, err
-	}
-	return resp.Data == "Affected", nil
-}
+//func UpdateEmailProvider(provider Provider, form EmailProviderForm) (bool, error) {
+//	if form.Owner != "" {
+//		provider.Owner = form.Owner
+//	}
+//	if form.Name != "" {
+//		provider.Name = form.Name
+//	}
+//	if form.DisplayName != "" {
+//		provider.DisplayName = form.DisplayName
+//	}
+//	if form.Host != "" {
+//		provider.Host = form.Host
+//	}
+//	if form.Port != 0 {
+//		provider.Port = form.Port
+//	}
+//	if form.Username != "" {
+//		provider.ClientId = form.Username
+//	}
+//	if form.Password != "" {
+//		provider.ClientSecret = form.Password
+//	}
+//	if form.Type != "" {
+//		provider.Type = form.Type
+//	}
+//	if form.ProviderUrl != "" {
+//		provider.ProviderUrl = form.ProviderUrl
+//	}
+//	if form.Content != "" {
+//		provider.Content = form.Content
+//	}
+//	if form.Title != "" {
+//		provider.Title = form.Title
+//	}
+//
+//	postBytes, err := json.Marshal(provider)
+//	if err != nil {
+//		return false, err
+//	}
+//
+//	resp, err := doPost("update-provider", map[string]string{
+//		"id": provider.Owner + "/" + provider.Name,
+//	}, postBytes, false)
+//	if err != nil {
+//		return false, err
+//	}
+//	return resp.Data == "Affected", nil
+//}

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 type Provider struct {
@@ -90,4 +91,21 @@ func GetProvider(id string) (*Provider, error) {
 		return nil, err
 	}
 	return provider, nil
+}
+
+func UpdateProvider(provider *Provider) (bool, error) {
+	queryMap := map[string]string{
+		"id": fmt.Sprintf("%s/%s", provider.Owner, provider.Name),
+	}
+	postBytes, err := json.Marshal(provider)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := doPost("update-provider", queryMap, postBytes, false)
+	if err != nil {
+		return false, err
+	}
+
+	return resp.Data == "Affected", nil
 }
