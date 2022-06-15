@@ -17,6 +17,7 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 type smsForm struct {
@@ -44,4 +45,67 @@ func SendSms(content string, receivers ...string) error {
 	}
 
 	return nil
+}
+
+type SmsProviderForm struct {
+	Owner        string
+	ProviderUrl  string
+	Name         string
+	DisplayName  string
+	Type         string
+	ClientId     string
+	ClientSecret string
+	SignName     string
+	TemplateCode string
+	AppId        string
+	Metadata     string
+}
+
+func NewSmsProvider(_type, clientId, clientSecret, signName, templateCode, appId, owner string) SmsProviderForm {
+	str := genRandomString(6)
+	name := "provider_" + str
+	displayName := "New Provider - " + str
+	form := SmsProviderForm{
+		Owner:        owner,
+		Name:         name,
+		DisplayName:  displayName,
+		Type:         _type,
+		ProviderUrl:  "https://github.com/organizations/xxx/settings/applications/1234567",
+		ClientId:     clientId,
+		ClientSecret: clientSecret,
+		SignName:     signName,
+		TemplateCode: templateCode,
+		AppId:        appId,
+	}
+	return form
+}
+
+func CreateSmsProvider(form SmsProviderForm) (bool, error) {
+	provider := Provider{
+		Owner:        form.Owner,
+		Name:         form.Name,
+		DisplayName:  form.DisplayName,
+		ClientId:     form.ClientId,
+		ClientSecret: form.ClientSecret,
+		Type:         form.Type,
+		ProviderUrl:  form.ProviderUrl,
+		CreatedTime:  time.Now().Format("2006-01-02T15:04:05+08:00"),
+		Category:     "SMS",
+		Method:       "Normal",
+		SignName:     form.SignName,
+		TemplateCode: form.TemplateCode,
+		AppId:        form.AppId,
+		Metadata:     form.Metadata,
+	}
+
+	postBytes, err := json.Marshal(provider)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := doPost("add-provider", nil, postBytes, false)
+	if err != nil {
+		return false, err
+	}
+	return resp.Data == "Affected", nil
 }
