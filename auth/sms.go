@@ -58,6 +58,7 @@ type SmsProviderForm struct {
 	SignName     string
 	TemplateCode string
 	AppId        string
+	Metadata     string
 }
 
 func NewSmsProvider(_type, clientId, clientSecret, signName, templateCode, appId, owner string) SmsProviderForm {
@@ -94,6 +95,7 @@ func CreateSmsProvider(form SmsProviderForm) (bool, error) {
 		SignName:     form.SignName,
 		TemplateCode: form.TemplateCode,
 		AppId:        form.AppId,
+		Metadata:     form.Metadata,
 	}
 
 	postBytes, err := json.Marshal(provider)

@@ -63,6 +63,7 @@ type EmailProviderForm struct {
 	Name        string
 	DisplayName string
 	Type        string
+	Metadata    string
 }
 
 func NewEmailProvider(host string, port int, username string, password string, owner string) EmailProviderForm {
@@ -101,6 +102,7 @@ func CreateEmailProvider(form EmailProviderForm) (bool, error) {
 		CreatedTime:  time.Now().Format("2006-01-02T15:04:05+08:00"),
 		Category:     "Email",
 		Method:       "Normal",
+		Metadata:     form.Metadata,
 	}
 
 	postBytes, err := json.Marshal(provider)
