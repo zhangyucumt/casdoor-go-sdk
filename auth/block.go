@@ -9,6 +9,7 @@ type Block struct {
 	IP             string                 `xorm:"varchar(100)" json:"ip"`
 	NetworkSegment string                 `xorm:"varchar(100)" json:"network_segment"`
 	Properties     map[string]interface{} `json:"properties"`
+	Status         string                 `xorm:"varchar(100)" json:"status"`
 	CreatedTime    string                 `xorm:"varchar(100) created_time created" json:"createdTime"`
 }
 
