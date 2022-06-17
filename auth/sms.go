@@ -25,6 +25,12 @@ type smsForm struct {
 	Receivers []string `json:"receivers"`
 }
 
+type normalSmsForm struct {
+	TemplateCode string            `json:"templateCode"`
+	Params       map[string]string `json:"params"`
+	Receivers    []string          `json:"receivers"`
+}
+
 func SendSms(content string, receivers ...string) error {
 	form := smsForm{
 		Content:   content,
@@ -36,6 +42,29 @@ func SendSms(content string, receivers ...string) error {
 	}
 
 	resp, err := doPost("send-sms", nil, postBytes, false)
+	if err != nil {
+		return err
+	}
+
+	if resp.Status != "ok" {
+		return fmt.Errorf(resp.Msg)
+	}
+
+	return nil
+}
+
+func SendNormalSms(templateCode string, params map[string]string, receivers ...string) error {
+	form := normalSmsForm{
+		TemplateCode: templateCode,
+		Receivers:    receivers,
+		Params:       params,
+	}
+	postBytes, err := json.Marshal(form)
+	if err != nil {
+		return err
+	}
+
+	resp, err := doPost("send-normal-sms", nil, postBytes, false)
 	if err != nil {
 		return err
 	}
