@@ -23,18 +23,21 @@ import (
 type smsForm struct {
 	Content   string   `json:"content"`
 	Receivers []string `json:"receivers"`
+	OrgId     string   `json:"organizationId"` // e.g. "admin/built-in"
 }
 
 type normalSmsForm struct {
 	TemplateCode string            `json:"templateCode"`
 	Params       map[string]string `json:"params"`
 	Receivers    []string          `json:"receivers"`
+	OrgId        string            `json:"organizationId"` // e.g. "admin/built-in"
 }
 
 func SendSms(content string, receivers ...string) error {
 	form := smsForm{
 		Content:   content,
 		Receivers: receivers,
+		OrgId:     fmt.Sprintf("admin/%s", authConfig.OrganizationName),
 	}
 	postBytes, err := json.Marshal(form)
 	if err != nil {
@@ -58,6 +61,7 @@ func SendNormalSms(templateCode string, params map[string]string, receivers ...s
 		TemplateCode: templateCode,
 		Receivers:    receivers,
 		Params:       params,
+		OrgId:        fmt.Sprintf("admin/%s", authConfig.OrganizationName),
 	}
 	postBytes, err := json.Marshal(form)
 	if err != nil {
