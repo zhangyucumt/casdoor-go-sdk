@@ -3,8 +3,8 @@ package auth
 type Setting struct {
 	*CommonObject
 
-	Value       string `xorm:"varchar(255) notnull" json:"value"`
-	Description string `xorm:"varchar(255) notnull" json:"description"`
+	Value       interface{} `xorm:"notnull" json:"value"`
+	Description string      `xorm:"varchar(255) notnull" json:"description"`
 
 	CreatedTime string `xorm:"varchar(100) created_time created" json:"createdTime"`
 }
