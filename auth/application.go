@@ -58,6 +58,7 @@ type Application struct {
 	TermsOfUse           string   `xorm:"varchar(100)" json:"termsOfUse"`
 	SignupHtml           string   `xorm:"mediumtext" json:"signupHtml"`
 	SigninHtml           string   `xorm:"mediumtext" json:"signinHtml"`
+	WhiteMode            bool     `xorm:"default false" json:"whiteMode"`
 }
 
 func AddApplication(application *Application) (bool, error) {
