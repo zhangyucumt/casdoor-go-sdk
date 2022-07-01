@@ -66,7 +66,7 @@ func GetRoleByUser(username string) (*Role, error) {
 
 	url := GetUrl("get-user-role", queryMap)
 
-	bytes, err := DoGetBytes(url)
+	bytes, err := DoGetBytesRaw(url)
 	if err != nil {
 		return nil, err
 	}
