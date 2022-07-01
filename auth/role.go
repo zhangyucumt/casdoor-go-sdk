@@ -58,7 +58,7 @@ func GetRole(name string) (*Role, error) {
 	return role, nil
 }
 
-func GetRoleByUser(username string) (*Role, error) {
+func GetRoleByUser(username string) ([]*Role, error) {
 	queryMap := map[string]string{
 		"owner": authConfig.OrganizationName,
 		"user":  username,
@@ -66,17 +66,17 @@ func GetRoleByUser(username string) (*Role, error) {
 
 	url := GetUrl("get-user-role", queryMap)
 
-	bytes, err := DoGetBytesRaw(url)
+	bytes, err := DoGetBytes(url)
 	if err != nil {
 		return nil, err
 	}
 
-	var role *Role
-	err = json.Unmarshal(bytes, &role)
+	var roles []*Role
+	err = json.Unmarshal(bytes, &roles)
 	if err != nil {
 		return nil, err
 	}
-	return role, nil
+	return roles, nil
 }
 
 func UpdateRole(role *Role) (bool, error) {
