@@ -9,10 +9,11 @@ type Action struct {
 	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
 	CreatedTime string `xorm:"varchar(100) created_time created" json:"createdTime"`
-	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
-	Resource string `xorm:"mediumtext" json:"resource"`
-	Method   string `xorm:"varchar(100)" json:"method"`
+	Label       string `xorm:"varchar(100) notnull" json:"label"`
+	DisplayName string `xorm:"varchar(100)" json:"displayName"`
+	Resource    string `xorm:"mediumtext" json:"resource"`
+	Method      string `xorm:"varchar(100)" json:"method"`
 }
 
 func GetActions() ([]*Action, error) {
