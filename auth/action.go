@@ -8,6 +8,7 @@ import (
 type Action struct {
 	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
+	Application string `xorm:"varchar(100)" json:"application"`
 	CreatedTime string `xorm:"varchar(100) created_time created" json:"createdTime"`
 
 	Label       string `xorm:"varchar(100) notnull" json:"label"`
@@ -18,7 +19,8 @@ type Action struct {
 
 func GetActions() ([]*Action, error) {
 	queryMap := map[string]string{
-		"owner": authConfig.OrganizationName,
+		"owner":       authConfig.OrganizationName,
+		"application": authConfig.ApplicationName,
 	}
 
 	url := GetUrl("get-actions", queryMap)
