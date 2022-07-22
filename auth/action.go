@@ -40,7 +40,8 @@ func GetActions() ([]*Action, error) {
 
 func GetAction(name string) (*Action, error) {
 	queryMap := map[string]string{
-		"id": fmt.Sprintf("%s/%s", authConfig.OrganizationName, name),
+		"id":          fmt.Sprintf("%s/%s", authConfig.OrganizationName, name),
+		"application": authConfig.ApplicationName,
 	}
 
 	url := GetUrl("get-action", queryMap)
@@ -60,8 +61,9 @@ func GetAction(name string) (*Action, error) {
 
 func GetActionByUser(username string) (*Action, error) {
 	queryMap := map[string]string{
-		"owner": authConfig.OrganizationName,
-		"user":  username,
+		"owner":       authConfig.OrganizationName,
+		"user":        username,
+		"application": authConfig.ApplicationName,
 	}
 
 	url := GetUrl("get-user-role", queryMap)
