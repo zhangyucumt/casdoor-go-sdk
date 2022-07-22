@@ -211,7 +211,7 @@ func modifyRole(action string, role *Role, columns []string) (*Response, bool, e
 // possible actions are `add-action`, `update-action`, `delete-action`,
 func modifyAction(url string, action *Action, columns []string) (*Response, bool, error) {
 	queryMap := map[string]string{
-		"id": fmt.Sprintf("%s/%s", action.Owner, action.Name),
+		"id": fmt.Sprintf("%s/%s/%s", action.Owner, action.Application, action.Name),
 	}
 
 	if len(columns) != 0 {
@@ -219,6 +219,7 @@ func modifyAction(url string, action *Action, columns []string) (*Response, bool
 	}
 
 	action.Owner = authConfig.OrganizationName
+	action.Application = authConfig.ApplicationName
 	postBytes, err := json.Marshal(action)
 	if err != nil {
 		return nil, false, err

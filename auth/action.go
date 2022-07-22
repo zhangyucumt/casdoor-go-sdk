@@ -40,8 +40,7 @@ func GetActions() ([]*Action, error) {
 
 func GetAction(name string) (*Action, error) {
 	queryMap := map[string]string{
-		"id":          fmt.Sprintf("%s/%s", authConfig.OrganizationName, name),
-		"application": authConfig.ApplicationName,
+		"id": fmt.Sprintf("%s/%s/%s", authConfig.OrganizationName, authConfig.ApplicationName, name),
 	}
 
 	url := GetUrl("get-action", queryMap)
