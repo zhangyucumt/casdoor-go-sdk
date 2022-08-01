@@ -63,20 +63,25 @@ type OperateLog struct {
 //	return ret
 //}
 
-func GetOperateLogs(queryMap map[string]string) ([]*OperateLog, error) {
+func GetOperateLogs(queryMap map[string]string) (int, []*OperateLog, error) {
 	url := GetUrl("get-operate-logs", queryMap)
 
-	bytes, err := DoGetBytesRaw(url)
+	resp, err := DoGetResponse(url)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
+	}
+
+	bytes, err := json.Marshal(resp.Data)
+	if err != nil {
+		return 0, nil, err
 	}
 
 	var operateLogs []*OperateLog
 	err = json.Unmarshal(bytes, &operateLogs)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
-	return operateLogs, nil
+	return resp.Data2.(int), operateLogs, nil
 }
 
 func GetOperateLog(uuid string) (*OperateLog, error) {
