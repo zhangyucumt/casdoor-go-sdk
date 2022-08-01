@@ -2,7 +2,6 @@ package auth
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 type OperateLogLevel int
@@ -31,42 +30,40 @@ type OperateLog struct {
 	CreatedTime     string          `xorm:"varchar(100)" json:"createdTime"`
 }
 
-type OperateLogQueryParams struct {
-	PageSize    int             `json:"pageSize"`
-	Page        int             `json:"p"`
-	Field       string          `json:"field"`
-	Value       string          `json:"value"`
-	SortField   string          `json:"sortField"`
-	SortOrder   string          `json:"sortOrder"`
-	User        string          `json:"user"`
-	Level       OperateLogLevel `json:"level"`
-	RequestPath string          `json:"requestPath"`
-	Method      string          `json:"method"`
-	Name        string          `json:"name"`
-	HttpCode    int             `json:"httpCode"`
-	OperateIp   string          `json:"operateIp"`
-}
+//type OperateLogQueryParams struct {
+//	PageSize    int             `json:"pageSize"`
+//	Page        int             `json:"p"`
+//	Field       string          `json:"field"`
+//	Value       string          `json:"value"`
+//	SortField   string          `json:"sortField"`
+//	SortOrder   string          `json:"sortOrder"`
+//	User        string          `json:"user"`
+//	Level       OperateLogLevel `json:"level"`
+//	RequestPath string          `json:"requestPath"`
+//	Method      string          `json:"method"`
+//	Name        string          `json:"name"`
+//	HttpCode    int             `json:"httpCode"`
+//	OperateIp   string          `json:"operateIp"`
+//}
 
-func (p *OperateLogQueryParams) Query() map[string]string {
-	pBytes, err := json.Marshal(p)
-	if err != nil {
-		return nil
-	}
-	m := make(map[string]interface{})
-	err = json.Unmarshal(pBytes, &m)
-	if err != nil {
-		return nil
-	}
-	ret := make(map[string]string)
-	for k, v := range m {
-		ret[k] = fmt.Sprintf("%v", v)
-	}
-	return ret
-}
+//func (p *OperateLogQueryParams) Query() map[string]string {
+//	pBytes, err := json.Marshal(p)
+//	if err != nil {
+//		return nil
+//	}
+//	m := make(map[string]interface{})
+//	err = json.Unmarshal(pBytes, &m)
+//	if err != nil {
+//		return nil
+//	}
+//	ret := make(map[string]string)
+//	for k, v := range m {
+//		ret[k] = fmt.Sprintf("%v", v)
+//	}
+//	return ret
+//}
 
-func GetOperateLogs(params OperateLogQueryParams) ([]*OperateLog, error) {
-	queryMap := params.Query()
-
+func GetOperateLogs(queryMap map[string]string) ([]*OperateLog, error) {
 	url := GetUrl("get-operate-logs", queryMap)
 
 	bytes, err := DoGetBytesRaw(url)
