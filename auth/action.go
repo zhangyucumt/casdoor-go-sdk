@@ -8,16 +8,19 @@ import (
 type Action struct {
 	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
+	Application string `xorm:"varchar(100)" json:"application"`
 	CreatedTime string `xorm:"varchar(100) created_time created" json:"createdTime"`
-	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
-	Resource string `xorm:"mediumtext" json:"resource"`
-	Method   string `xorm:"varchar(100)" json:"method"`
+	Label       string `xorm:"varchar(100) notnull" json:"label"`
+	DisplayName string `xorm:"varchar(100)" json:"displayName"`
+	Resource    string `xorm:"mediumtext" json:"resource"`
+	Method      string `xorm:"varchar(100)" json:"method"`
 }
 
 func GetActions() ([]*Action, error) {
 	queryMap := map[string]string{
-		"owner": authConfig.OrganizationName,
+		"owner":       authConfig.OrganizationName,
+		"application": authConfig.ApplicationName,
 	}
 
 	url := GetUrl("get-actions", queryMap)
@@ -37,7 +40,7 @@ func GetActions() ([]*Action, error) {
 
 func GetAction(name string) (*Action, error) {
 	queryMap := map[string]string{
-		"id": fmt.Sprintf("%s/%s", authConfig.OrganizationName, name),
+		"id": fmt.Sprintf("%s/%s/%s", authConfig.OrganizationName, authConfig.ApplicationName, name),
 	}
 
 	url := GetUrl("get-action", queryMap)
@@ -57,8 +60,9 @@ func GetAction(name string) (*Action, error) {
 
 func GetActionByUser(username string) (*Action, error) {
 	queryMap := map[string]string{
-		"owner": authConfig.OrganizationName,
-		"user":  username,
+		"owner":       authConfig.OrganizationName,
+		"user":        username,
+		"application": authConfig.ApplicationName,
 	}
 
 	url := GetUrl("get-user-role", queryMap)

@@ -109,3 +109,22 @@ func UpdateProvider(provider *Provider) (bool, error) {
 
 	return resp.Data == "Affected", nil
 }
+
+func AddProvider(provider *Provider) (bool, error) {
+	queryMap := map[string]string{
+		"id": fmt.Sprintf("%s/%s", provider.Owner, provider.Name),
+	}
+
+	provider.Owner = authConfig.OrganizationName
+	postBytes, err := json.Marshal(provider)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := doPost("add-provider", queryMap, postBytes, false)
+	if err != nil {
+		return false, err
+	}
+
+	return resp.Data == "Affected", nil
+}

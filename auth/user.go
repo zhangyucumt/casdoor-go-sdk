@@ -86,7 +86,8 @@ type User struct {
 
 func GetUsers() ([]*User, error) {
 	queryMap := map[string]string{
-		"owner": authConfig.OrganizationName,
+		"owner":             authConfig.OrganizationName,
+		"signupApplication": authConfig.ApplicationName,
 	}
 
 	url := GetUrl("get-users", queryMap)
