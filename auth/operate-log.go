@@ -81,7 +81,7 @@ func GetOperateLogs(queryMap map[string]string) (int, []*OperateLog, error) {
 	if err != nil {
 		return 0, nil, err
 	}
-	return resp.Data2.(int), operateLogs, nil
+	return int(resp.Data2.(float64)), operateLogs, nil
 }
 
 func GetOperateLog(uuid string) (*OperateLog, error) {
