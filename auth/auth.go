@@ -37,3 +37,7 @@ func InitConfig(endpoint string, clientId string, clientSecret string, jwtPublic
 		ApplicationName:  applicationName,
 	}
 }
+
+func GetConfig() AuthConfig {
+	return authConfig
+}
