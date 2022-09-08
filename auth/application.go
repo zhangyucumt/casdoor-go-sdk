@@ -59,6 +59,8 @@ type Application struct {
 	SignupHtml           string   `xorm:"mediumtext" json:"signupHtml"`
 	SigninHtml           string   `xorm:"mediumtext" json:"signinHtml"`
 	WhiteMode            bool     `xorm:"default false" json:"whiteMode"`
+	EnableMfa            bool     `json:"enableMfa"`
+	MfaMethod            string   `json:"mfa_method"`
 }
 
 func AddApplication(application *Application) (bool, error) {
