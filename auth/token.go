@@ -154,16 +154,24 @@ func RefreshOAuthToken(refreshToken string) (*oauth2.Token, error) {
 	return token, err
 }
 
-func IsApiTokenValid(code, secret string) (bool, error) {
-	postBytes, err := json.Marshal(map[string]string{"code": code, "secret": secret})
-	if err != nil {
-		return false, err
+func ValidApiToken(code, secret string) (*User, error) {
+	queryMap := map[string]string{
+		"code":             code,
+		"secret":           secret,
+		"application_name": authConfig.ApplicationName,
 	}
 
-	resp, err := doPost("api-token-valid", nil, postBytes, false)
+	url := GetUrl("valid-api-token", queryMap)
+
+	bytes, err := DoGetBytesRaw(url)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
-	fmt.Println(resp)
-	return resp.Data == "Affected", nil
+
+	var user *User
+	err = json.Unmarshal(bytes, &user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
