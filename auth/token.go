@@ -164,7 +164,6 @@ func ValidApiToken(code, secret string) (*User, error) {
 	url := GetUrl("valid-api-token", queryMap)
 
 	bytes, err := DoGetBytesRaw(url)
-	fmt.Println(string(bytes))
 	if err != nil {
 		return nil, err
 	}
